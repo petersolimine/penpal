@@ -15,11 +15,16 @@ const initialize = async () => {
     page.setDefaultNavigationTimeout(30000); //30 seconds
 
     await page.goto("https://genius.com/Wilderado-surefire-lyrics");
-    await page.waitForXPath("/html/body/div[1]/main/div[2]/div[2]/div[2]/div/div[2]");
-    let elHandle = await page.$x("/html/body/div[1]/main/div[2]/div[2]/div[2]/div/div[2]");
-    let value = await page.evaluate((el) => el.textContent, elHandle[0]);
+    // await page.waitForXPath("/html/body/div[1]/main/div[2]/div[2]/div[2]/div/div[2]");
+    let elHandle = await page.$x("/html/body/div[1]/main/div[2]/div[2]/div[2]/div/div[2]"); //try them all until error? make sure content is lyrics?
+    let elHandle2 = await page.$x("/html/body/div[1]/main/div[2]/div[2]/div[2]/div/div[5]");
+    let value = await page.evaluate((el) => el.innerText, elHandle[0]);
+
+    //const extractedText = await page.$eval("*", (el) => el.innerText);
+    // console.log(extractedText);
+
     console.log(value);
-    s = value.replace(/([A-Z])/g, "\n$1").trim();
+    //s = value.replace(/([A-Z])/g, "\n$1").trim();
   } catch (err) {
     console.log("ERR:", err.message);
   }
