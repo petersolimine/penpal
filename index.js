@@ -16,23 +16,20 @@ const initialize = async () => {
     page.setDefaultNavigationTimeout(30000); //30 seconds
 
     await page.goto("https://genius.com/Bob-dylan-lily-rosemary-and-the-jack-of-hearts-lyrics");
-    // hypothesis: all lyrics are split in this way.. Maybe?
 
-    let elHandle = await page.$x("/html/body/div[1]/main/div[2]/div[2]/div[2]/div/div[2]");
-    let value = await page.evaluate((el) => el.innerText, elHandle[0]);
-    // Some crap in every lyric
-    value = value.replace("JID “Dance Now' Official Lyrics & Meaning | Verified", "");
-    value = value.replace(/(?:\n\n)/g, "");
-
-    console.log(value);
-    let value2 = "";
-    try {
-      let elHandle2 = await page.$x("/html/body/div[1]/main/div[2]/div[2]/div[2]/div/div[5]");
-      value2 = await page.evaluate((el) => el.innerText, elHandle2[0]);
-      console.log(value2);
-    } catch (err) {}
-
-    fs.writeFileSync("./lyrics.txt", value + value2, "UTF-8");
+    let lyrics = "";
+    for (let i = 2; i < 12; i += 3) {
+      try {
+        let elHandle = await page.$x(`/html/body/div[1]/main/div[2]/div[2]/div[2]/div/div[${i}]`);
+        let value = await page.evaluate((el) => el.innerText, elHandle[0]);
+        lyrics = lyrics + value;
+      } catch (err) {
+        // write to file, break
+        lyrics = lyrics.replace("JID “Dance Now' Official Lyrics & Meaning | Verified", "");
+        fs.writeFileSync("./lyrics.txt", value + value2, "UTF-8");
+        break;
+      }
+    }
   } catch (err) {
     console.log("ERR:", err.message);
   }
