@@ -1,2 +1,9 @@
 # penpal
 Scrape lyrics and fine tune a GPT-3 model to write songs
+
+The idea here is to scrape songs from Genius and train a model with empty prompts where the completions are songs you like.
+
+Doesn't make sense? No problem... 
+
+All you'll need to do (eventually) is a custom list of Genius.com links to be scraped, an OpenAI Secret Key, NPM, and Python.
+
