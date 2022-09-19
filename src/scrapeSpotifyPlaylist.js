@@ -8,7 +8,8 @@ async function scrapeSpotifyPlaylist(url) {
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: "networkidle0" });
   const text = await page.evaluate(() => {
-    const elements = document.querySelectorAll("a[dir='auto']");
+    const elements =
+      document.querySelectorAll("a[dir='auto']") + document.querySelectorAll("div[dir='auto']");
     const text = [];
     for (let i = 0; i < elements.length; i += 2) {
       text.push(elements[i].innerText);
