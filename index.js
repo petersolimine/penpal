@@ -3,38 +3,62 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 fs = require("fs");
 
-const initialize = async () => {
-  try {
-    let browser = await puppeteer.launch({
-      args: ["--disable-web-security", "--disable-features=IsolateOrigins,site-per-process"],
-      executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // local chrome on macOS. Remove this line of not on MacOS
-      headless: false,
-      ignoreHTTPSErrors: false,
-      blockAds: false,
-    });
+// a function that prints all the text content of a webpage inside of divs with the attribute "data-lyrics-container" equal to true and writes the lyrics to a file called "lyrics.txt"
+
+function getLyrics(url) {
+  return new Promise(async (resolve, reject) => {
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(30000); //30 seconds
-
-    await page.goto("https://genius.com/Bob-dylan-lily-rosemary-and-the-jack-of-hearts-lyrics");
-
-    let lyrics = "";
-    for (let i = 2; i < 12; i += 3) {
-      try {
-        let elHandle = await page.$x(`/html/body/div[1]/main/div[2]/div[2]/div[2]/div/div[${i}]`);
-        let value = await page.evaluate((el) => el.innerText, elHandle[0]);
-        lyrics = lyrics + value;
-      } catch (err) {
-        // write to file, break
-        lyrics = lyrics.replace("JID “Dance Now' Official Lyrics & Meaning | Verified", "");
-        fs.writeFileSync("./lyrics.txt", value + value2, "UTF-8");
-        break;
+    await page.goto(url);
+    const text = await page.evaluate(() => {
+      const elements = document.querySelectorAll("div[data-lyrics-container='true']");
+      const text = [];
+      for (let i = 0; i < elements.length; i++) {
+        text.push(elements[i].innerText);
       }
-    }
-  } catch (err) {
-    console.log("ERR:", err.message);
+      return text;
+    });
+    await browser.close();
+    resolve(text);
+  });
+}
+
+// a function that takes an array of strings and, for each string, processes the string to removes each of the newline characters that is followed by a space or a punctioation mark, and then returns the array
+function removeUnneededNewlines(array) {
+  for (let i = 0; i < array.length; i++) {
+    array[i] = array[i].replace(/\n(?=[.,?! ])/g, "");
   }
-};
+  return array;
+}
 
-initialize();
+// a funcion that take an array of strings and for each string
+// 1. makes sure there is only one newline character before each '[' character
+// 2. Ensures that there are no double newline characters by turning double newline characters into single newline characters, and
+// The function then returns the array.
 
-exports.initialize = initialize;
+function addNewlines(array) {
+  for (let i = 0; i < array.length; i++) {
+    array[i] = array[i].replace(/\n(?=\[)/g, "");
+    array[i] = array[i].replace(/\n\n/g, "\n");
+  }
+  return array;
+}
+
+// a function that takes an array of strings and writes each string to a file called "lyrics.txt" by appending to the end of the file
+function writeLyrics(array) {
+  for (let i = 0; i < array.length; i++) {
+    fs.appendFileSync("lyrics.txt", array[i]);
+  }
+}
+
+// call the getLyrics function with a url
+const lyricsPromise = getLyrics(
+  "https://genius.com/Bob-dylan-lily-rosemary-and-the-jack-of-hearts-lyrics"
+);
+
+lyricsPromise.then((lyrics) => {
+  // call the removeSpaces function with the lyrics
+  const lyricsWithoutSpaces = removeUnneededNewlines(lyrics);
+  const lyricsWithNewlines = addNewlines(lyricsWithoutSpaces);
+  writeLyrics(lyricsWithNewlines, "lyrics.txt");
+});
