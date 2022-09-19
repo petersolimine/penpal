@@ -62,3 +62,12 @@ lyricsPromise.then((lyrics) => {
   const lyricsWithNewlines = addNewlines(lyricsWithoutSpaces);
   writeLyrics(lyricsWithNewlines, "lyrics.txt");
 });
+
+// a function that takes an array of strings and
+// 1. combines them into one string
+// 2. Appends the string to a .jsonl file called trainingData.jsonl in the format {"prompt": "", "completion": "the string"}
+function addLyricsToTrainingData(array) {
+  const string = array.join(" ");
+  const json = JSON.stringify({ prompt: "", completion: string });
+  fs.appendFileSync("trainingData.jsonl", json + "");
+}
