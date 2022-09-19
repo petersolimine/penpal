@@ -2,14 +2,23 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 puppeteer.use(StealthPlugin());
 
+// function that combines two arrays into one array by alternating between the two arrays
+function combineArrays(array1, array2) {
+  const combined = [];
+  for (let i = 0; i < array1.length; i++) {
+    combined.push(array1[i]);
+    combined.push(array2[i]);
+  }
+  return combined;
+}
+
 // a function that uses puppeteer to scrape the inner text of each HTML element that has the attribute "dir" equal to "auto" and returns an array of strings where each string is the inner text of an <a> element
 async function scrapeSpotifyPlaylist(url) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: "networkidle0" });
   const text = await page.evaluate(() => {
-    const elements =
-      document.querySelectorAll("a[dir='auto']") + document.querySelectorAll("div[dir='auto']");
+    const elements = document.querySelectorAll("a[dir='auto']");
     const text = [];
     for (let i = 0; i < elements.length; i += 2) {
       text.push(elements[i].innerText);
