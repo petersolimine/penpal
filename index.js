@@ -51,17 +51,14 @@ function writeLyrics(array) {
   }
 }
 
-// call the getLyrics function with a url
-const lyricsPromise = getLyrics(
-  "https://genius.com/Bob-dylan-lily-rosemary-and-the-jack-of-hearts-lyrics"
-);
-
-lyricsPromise.then((lyrics) => {
-  // call the removeSpaces function with the lyrics
-  const lyricsWithoutSpaces = removeUnneededNewlines(lyrics);
-  const lyricsWithNewlines = addNewlines(lyricsWithoutSpaces);
-  writeLyrics(lyricsWithNewlines, "lyrics.txt");
-});
+// a function that takes an array of strings, and returns an array of strings where the character '“' is replaced with the character '"' and also the text "  JID “Dance Now' Official Lyrics & Meaning | Verified" is removed
+function removeUnneededText(array) {
+  for (let i = 0; i < array.length; i++) {
+    array[i] = array[i].replace(/“/g, '"');
+    array[i] = array[i].replace("  JID “Dance Now' Official Lyrics & Meaning | Verified", "");
+  }
+  return array;
+}
 
 // a function that takes an array of strings and
 // 1. combines them into one string
@@ -71,3 +68,16 @@ function addLyricsToTrainingData(array) {
   const json = JSON.stringify({ prompt: "", completion: string });
   fs.appendFileSync("trainingData.jsonl", json + "");
 }
+
+// call the getLyrics function with a url
+const lyricsPromise = getLyrics(
+  "https://genius.com/Bob-dylan-lily-rosemary-and-the-jack-of-hearts-lyrics"
+);
+
+lyricsPromise.then((lyrics) => {
+  // call the removeSpaces function with the lyrics
+  const lyricsWithoutSpaces = removeUnneededNewlines(lyrics);
+  const lyricsWithNewlines = addNewlines(lyricsWithoutSpaces);
+  const processedText = removeUnneededText(lyricsWithNewlines);
+  addLyricsToTrainingData(processedText);
+});
