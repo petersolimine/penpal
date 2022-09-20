@@ -6,11 +6,20 @@ import fs from "fs";
 const CRUFT = "JID \"Dance Now' Official Lyrics & Meaning | Verified";
 // a function that prints all the text content of a webpage inside of divs with the attribute "data-lyrics-container" equal to true and writes the lyrics to a file called "lyrics.txt"
 
-function getLyrics(url) {
+async function getLyrics(url) {
   return new Promise(async (resolve, reject) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(url);
+    // set the default timeout to 60 seconds
+    page.setDefaultNavigationTimeout(60000);
+    // try to go to url, if it cant get to the url, reject the promise, log the url to the console, and early return from the function
+    try {
+      await page.goto(url, { waitUntil: "networkidle2" });
+    } catch (error) {
+      reject(error);
+      console.log(url);
+      return;
+    }
     const text = await page.evaluate(() => {
       const elements = document.querySelectorAll("div[data-lyrics-container='true']");
       const text = [];
@@ -70,12 +79,16 @@ function addLyricsToTrainingData(array) {
   fs.appendFileSync("trainingData.jsonl", json + "\n");
 }
 
-export const scrapeLyricsAndAddToTrainingData = (url) => {
-  getLyrics(url).then((lyrics) => {
-    // call the removeSpaces function with the lyrics
-    const lyricsWithoutSpaces = removeUnneededNewlines(lyrics);
-    const lyricsWithNewlines = addNewlines(lyricsWithoutSpaces);
-    const processedText = removeUnneededText(lyricsWithNewlines);
-    addLyricsToTrainingData(processedText);
-  });
+export const scrapeLyricsAndAddToTrainingData = async (url) => {
+  try {
+    await getLyrics(url).then((lyrics) => {
+      // call the removeSpaces function with the lyrics
+      const lyricsWithoutSpaces = removeUnneededNewlines(lyrics);
+      const lyricsWithNewlines = addNewlines(lyricsWithoutSpaces);
+      const processedText = removeUnneededText(lyricsWithNewlines);
+      addLyricsToTrainingData(processedText);
+    });
+  } catch (err) {
+    console.log(url);
+  }
 };
