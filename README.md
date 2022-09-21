@@ -1,6 +1,6 @@
 # penpal
 
-Scrape lyrics and fine tune a GPT-3 model to write songs
+## Scrape lyrics and fine tune a GPT-3 model to write songs
 
 The idea here is to get songs from Genius and train a model with empty prompts where the completions are songs you like.
 
@@ -8,9 +8,9 @@ Doesn't make sense? No problem...
 
 All you'll need to do is create a custom list of Genius.com song links, an OpenAI Secret Key, and have NPM installed.
 
-#### To get started:
+## To get started:
 
-##### Scrape:
+### Scrape:
 
 1. Run `npm i`
 2. Add the songs you want to train on to `song_links.txt`, one per line
@@ -18,7 +18,7 @@ All you'll need to do is create a custom list of Genius.com song links, an OpenA
    1. If any links are printed to the console, that means they were not successfully scraped. You may want to add them to the end of the list.
 4. Done scraping! You should see a `trainingData.jsonl` file in the root directory
 
-##### Train:
+### Train:
 
 3. Create a `.env` file in the root directory by running `cp .env.example .env` in the terminal
 4. add your OpenAI API Key to the .env file
@@ -31,7 +31,7 @@ All you'll need to do is create a custom list of Genius.com song links, an OpenA
 6. Once your model is complete, add the model name to your .env
 7. Then you can run `npm run write` which will execute the `src/writeSong.js` script and output your results to `output.txt` in the root directory (and log them to the console)
 
-#### Example output
+## Example output
 
 The first run of this model, I fed it `[Verse 1]\nA friend to all is a friend to none` and the completion was:
 
@@ -56,7 +56,7 @@ The friend of none
 
 Not too bad, eh?
 
-#### Ideas for improvements:
+## Ideas for improvements:
 
 - Automatically pull playlists from Spotify and turn them into Genius.com links (see `src/scrapeSpotifyPlaylist.js`, I got a start with this but have not finished it yet. Have a look at how the genius.com links are structured: genius.com/Artist-name-song-name)
 - Right now the prompts are empty. Maybe results would improve if the prompt was the first line of a song? i.e. `[Verse 1]\nHello stranger, it's been a long time`
