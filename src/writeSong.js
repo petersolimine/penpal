@@ -40,7 +40,10 @@ function promptUser(select_type = false) {
       process.stdin.on("data", (text) => {
         if (text == "1\n" || text == "2\n") {
           process.stdin.pause();
-          resolve(text);
+          if (text === "1\n") {
+            resolve("[Chorus]\n");
+          }
+          resolve("[Verse 1]\n");
         } else {
           console.log("Please enter 1 or 2");
         }
