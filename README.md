@@ -62,3 +62,4 @@ Not too bad, eh?
 - Right now the prompts are empty. Maybe results would improve if the prompt was the first line of a song? i.e. `[Verse 1]\nHello stranger, it's been a long time`
 - Run each set of song lyrics through a davinci model with the ending `\n\nExplain what this song means:\n`, then capture the results and feed it to the fine-tuned model as a prompt
 - If someone wants to play around with the training parameters and report back, that would be cool too
+- abstract away the 'lyrics' aspect of this project and make it a general purpose tool for scraping data and formatting it for GPT-3 fine-tuning
