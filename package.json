@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "scrape": "node src/index.js"
   },
   "author": "",
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "dotenv": "^16.0.2",
     "fs": "0.0.1-security",
     "openai": "^3.0.0",
     "puppeteer": "^17.1.3",

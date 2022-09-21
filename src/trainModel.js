@@ -1,5 +1,3 @@
-// a function that reads from a file called ../trainingsData.jsonl and fine-tunes a gpt-3 model
-
 const fs = require("fs");
 const OpenAI = require("openai-api");
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
