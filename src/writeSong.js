@@ -12,19 +12,16 @@ let PROMPT = "";
 
 async function writeSong() {
   const openai = new OpenAIApi(configuration);
-  // Prints Chorus (1) or Verse (2)? to the console, and then waits for user input. If user enters 1, set PROMPT_PREFIX to "[Chorus]\n" and if the user enters 2, set PROMPT_PREFIX to "[Verse 1]\n"
-  // then, print "Enter the first line:\n" amd set PROMPT equal to the user input
-  console.log("Chorus (1) or Verse (2)?");
-  PROMPT_PREFIX = await promptUser(true);
-  console.log(`Enter the first line of the song:`);
-  PROMPT = await promptUser();
+  // reads from a file called 'input.txt' and sets PROMPT equal to the contents of the file
+  PROMPT = fs.readFileSync("input.txt", "utf8");
+
   const completion = await openai.createCompletion({
     model: process.env.GPT3_MODEL_ID,
-    prompt: PROMPT_PREFIX + PROMPT + "\n",
-    temperature: 0.9,
+    prompt: PROMPT,
+    temperature: 0.3,
     max_tokens: 1500,
     top_p: 1,
-    frequency_penalty: 0,
+    frequency_penalty: 0.05,
     presence_penalty: 0,
     stop: ["\n\n###\n\n"],
   });

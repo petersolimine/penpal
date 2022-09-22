@@ -29,7 +29,7 @@ All you'll need to do is create a custom list of Genius.com song links, an OpenA
    4. Queue the dataset for training by running `openai api fine_tunes.create -t trainingData_prepared.jsonl -m davinci --suffix "custom model name"` in the terminal
    5. Then wait. If you get disconnected, you can follow along by running `openai api fine_tunes.follow -i ft-SomeUniqueID `
 6. Once your model is complete, add the model name to your .env
-7. Then you can run `npm run write` which will execute the `src/writeSong.js` script and output your results to `output.txt` in the root directory (and log them to the console)
+7. Then you can edit the `input.txt` file and run `npm run write` which will execute the `src/writeSong.js` script and output your results to `output.txt` in the root directory (and log them to the console)
 
 ## Example output
 
