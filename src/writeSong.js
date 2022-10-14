@@ -18,11 +18,11 @@ async function writeSong() {
   const completion = await openai.createCompletion({
     model: process.env.GPT3_MODEL_ID,
     prompt: PROMPT,
-    temperature: 0.3,
-    max_tokens: 1500,
+    temperature: 1,
+    max_tokens: 1000,
     top_p: 1,
-    frequency_penalty: 0.05,
-    presence_penalty: 0,
+    frequency_penalty: 0.35,
+    presence_penalty: 0.1,
     stop: ["\n\n###\n\n"],
   });
   return completion;
