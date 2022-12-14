@@ -56,6 +56,10 @@ The friend of none
 
 Not too bad, eh?
 
+
+Note: the results from
+This model are way worse than ChatGPT. Leads me to believe that better parameters on a next iteration would work way better. Or just use chatGPT.
+
 ## Ideas for improvements:
 
 - Automatically pull playlists from Spotify and turn them into Genius.com links (see `src/scrapeSpotifyPlaylist.js`, I got a start with this but have not finished it yet. Have a look at how the genius.com links are structured: genius.com/Artist-name-song-name)
